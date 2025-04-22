@@ -1,0 +1,14 @@
+{
+  "name": "root",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "lerna": "^8.1.8",
+    "rollup": "^4.40.0"
+  }
+}

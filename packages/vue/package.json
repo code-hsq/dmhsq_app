@@ -1,0 +1,83 @@
+{
+  "name": "@dmhsq_app/vue",
+  "version": "1.0.1",
+  "description": "dmhsq_app的vue hooks",
+  "keywords": [
+    "dmhsq_app"
+  ],
+  "author": "zhangcan <dmhsq@qq.cn>",
+  "homepage": "https://gitee.com/mountain_wood/dmhsq_app",
+  "license": "ISC",
+  "type": "module",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "unpkg": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "src",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitee.com:mountain_wood/dmhsq_app.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/@dmhsq_app/vue.test.js",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "clean": "rimraf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@dmhsq_app/utils": "^1.0.1",
+    "vue": "^3.0.0"
+  },
+  "changelog": {
+    "0.0.1": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "0.0.2": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "0.0.3": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "0.0.4": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "0.0.5": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "0.0.6": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "0.0.7": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "1.0.1": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ]
+  }
+}
