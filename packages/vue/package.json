@@ -1,6 +1,6 @@
 {
   "name": "@dmhsq_app/vue",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "dmhsq_app的vue hooks",
   "keywords": [
     "dmhsq_app"
@@ -34,11 +34,33 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@dmhsq_app/utils": "^1.0.2",
+    "@dmhsq_app/utils": "^1.0.6"
+  },
+  "peerDependencies": {
     "vue": "^3.0.0"
   },
   "changelog": {
     "1.0.2": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "1.0.3": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "1.0.4": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "1.0.5": [
+      "版本更新",
+      "优化性能",
+      "修复问题"
+    ],
+    "1.0.6": [
       "版本更新",
       "优化性能",
       "修复问题"

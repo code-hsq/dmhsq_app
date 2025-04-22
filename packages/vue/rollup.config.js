@@ -9,12 +9,15 @@ const packageJson = JSON.parse(
 const config = {
   ...baseConfig,
   input: 'src/index.ts',
+  // 设置外部依赖
+  external: ['vue'],
   // 设置全局变量名映射（用于 UMD 格式）
   output: baseConfig.output.map((output) => {
     if (output.format === 'umd') {
       return {
         ...output,
         globals: {
+          'vue': 'Vue',
           '@dmhsq_app/vue': 'DAppVue',
         },
       };

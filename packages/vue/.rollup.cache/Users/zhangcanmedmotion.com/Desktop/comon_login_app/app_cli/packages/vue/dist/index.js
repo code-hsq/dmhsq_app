@@ -4,15 +4,19 @@ export * from './types';
 import { QR_Status } from './types';
 export const useQrCodeLogin = (config) => {
     const timeOut = 60;
-    if (!config.appId) {
-        throw new Error('appId is required');
-    }
-    if (!config.token) {
-        throw new Error('token is required');
-    }
-    if (!config.baseUrl) {
-        throw new Error('baseUrl is required');
-    }
+    // Validate config
+    const validateConfig = () => {
+        if (!config.appId) {
+            throw new Error('appId is required');
+        }
+        if (!config.token) {
+            throw new Error('token is required');
+        }
+        if (!config.baseUrl) {
+            throw new Error('baseUrl is required');
+        }
+    };
+    validateConfig();
     const state = reactive({
         loading: false,
         success: true,
@@ -26,83 +30,92 @@ export const useQrCodeLogin = (config) => {
         expiration: 0,
     });
     const times = ref(0);
-    const timer = ref();
+    const timer = ref(null);
     const qrCodeReq = getQrCodeUrlReqNoSend(config);
     const qrCodeQueryReq = getQrCodeQueryReqNoSend(config);
-    const queryStatus = () => {
+    const clearTimer = () => {
+        if (timer.value) {
+            clearInterval(timer.value);
+            timer.value = null;
+        }
+    };
+    const queryStatus = async () => {
         state.qrCodeTimeOut = false;
+        clearTimer();
+        const send = async () => {
+            try {
+                const response = await fetch(qrCodeQueryReq.url, {
+                    method: qrCodeQueryReq.method,
+                    headers: {
+                        ...qrCodeQueryReq.headers,
+                        'content-type': 'application/json',
+                    },
+                    mode: 'cors',
+                    body: JSON.stringify({
+                        key: state.key,
+                    }),
+                });
+                const res = await response.json();
+                if (res.data.status === QR_Status.HAD_LOGIN) {
+                    clearTimer();
+                    state.status = res.data.status;
+                    state.userInfo = res.data.userInfo;
+                    state.loginSuccess = true;
+                    state.token = res.data.token;
+                    state.expiration = res.data.expiration;
+                }
+                else {
+                    state.status = res.data.status;
+                }
+            }
+            catch (error) {
+                console.error('Error querying QR code status:', error);
+                state.success = false;
+            }
+        };
         timer.value = setInterval(() => {
             times.value += 3;
             send();
             if (times.value >= timeOut) {
-                clearInterval(timer.value);
+                clearTimer();
                 state.loginSuccess = false;
                 state.qrCodeTimeOut = true;
             }
         }, 3000);
-        const send = () => fetch(qrCodeQueryReq.url, {
-            method: qrCodeQueryReq.method,
-            headers: {
-                ...qrCodeQueryReq.headers,
-                'content-type': 'application/json',
-            },
-            mode: 'cors',
-            body: JSON.stringify({
-                key: state.key,
-            }),
-        })
-            .then((response) => {
-            return response.json();
-        })
-            .then((res) => {
-            if (res.data.status == QR_Status.HAD_LOGIN) {
-                timer.value = null;
-                clearInterval(timer.value);
-                state.status = res.data.status;
-                state.userInfo = res.data.userInfo;
-                state.loginSuccess = true;
-                state.token = res.data.token;
-                state.expiration = res.data.expiration;
-            }
-            else {
-                state.status = res.data.status;
-            }
-        });
     };
-    const getQrCode = () => {
+    const getQrCode = async () => {
         try {
-            if (timer.value) {
-                timer.value = null;
-                clearInterval(timer.value);
-            }
+            clearTimer();
             state.loading = true;
-            fetch(qrCodeReq.url, {
+            const response = await fetch(qrCodeReq.url, {
                 method: qrCodeReq.method,
                 headers: {
                     ...qrCodeReq.headers,
                 },
                 mode: 'cors',
-            })
-                .then(async (response) => {
-                const key = response.headers.get('x-app-key') || '';
-                const blob = await response.blob();
-                const _url = window.URL.createObjectURL(new Blob([blob]));
-                state.url = _url;
-                state.key = key;
-                state.loading = false;
-                state.success = true;
-                state.status = 1;
-                queryStatus();
-            })
-                .catch((error) => {
-                state.success = false;
-                throw error;
             });
+            const key = response.headers.get('x-app-key') || '';
+            const blob = await response.blob();
+            const _url = window.URL.createObjectURL(new Blob([blob]));
+            state.url = _url;
+            state.key = key;
+            state.loading = false;
+            state.success = true;
+            state.status = 1;
+            queryStatus();
         }
         catch (error) {
             state.loading = false;
             state.success = false;
+            console.error('Error getting QR code:', error);
             throw error;
+        }
+    };
+    // Cleanup function
+    const cleanup = () => {
+        clearTimer();
+        if (state.url) {
+            URL.revokeObjectURL(state.url);
         }
     };
     return {
@@ -117,6 +130,7 @@ export const useQrCodeLogin = (config) => {
         qrCodeTimeOut: computed(() => state.qrCodeTimeOut),
         expiration: computed(() => state.expiration),
         getQrCode,
+        cleanup,
     };
 };
 //# sourceMappingURL=index.js.map

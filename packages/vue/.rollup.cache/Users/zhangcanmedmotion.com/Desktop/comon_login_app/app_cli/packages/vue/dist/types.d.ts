@@ -4,7 +4,7 @@ export interface QR_UserInfo {
     id: string;
 }
 export declare enum QR_Status {
-    NO_SCAN = 0,
-    HAD_SCAN = 1,
-    HAD_LOGIN = 2
+    NO_SCAN = 1,
+    HAD_SCAN = 2,
+    HAD_LOGIN = 3
 }

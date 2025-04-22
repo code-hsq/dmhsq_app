@@ -1,5 +1,18 @@
 import { QrCodeLoginConfig } from '@dmhsq_app/utils';
 export * from './types';
+import { QR_UserInfo } from './types';
+export interface QrCodeState {
+    loading: boolean;
+    success: boolean;
+    url: string;
+    key: string;
+    loginSuccess: boolean;
+    token: string;
+    userInfo: QR_UserInfo;
+    status: number;
+    qrCodeTimeOut: boolean;
+    expiration: number;
+}
 export declare const useQrCodeLogin: (config: QrCodeLoginConfig) => {
     loading: import("vue").ComputedRef<boolean>;
     url: import("vue").ComputedRef<string>;
@@ -15,5 +28,6 @@ export declare const useQrCodeLogin: (config: QrCodeLoginConfig) => {
     status: import("vue").ComputedRef<number>;
     qrCodeTimeOut: import("vue").ComputedRef<boolean>;
     expiration: import("vue").ComputedRef<number>;
-    getQrCode: () => void;
+    getQrCode: () => Promise<void>;
+    cleanup: () => void;
 };
